@@ -1,4 +1,40 @@
 <p>add-person works!</p>
+<form [formGroup]="personForm">
+
+    <label for="first-name">First Name: </label>
+    <input id="first-name" type="text" formControlName="firstName">
+
+    <label for="last-name">Last Name: </label>
+    <input id="last-name" type="text" formControlName="lastName">
+
+    <div formGroupName="address">
+        <h2>Address</h2>
+
+        <label for="addressLine1">Address Line 1: </label>
+        <input id="addressLine1" type="text" formControlName="addressLine1">
+
+        <label for="addressLine2">Address Line 2: </label>
+        <input id="addressLine2" type="text" formControlName="addressLine2">
+
+        <label for="city">City: </label>
+        <input id="city" type="text" formControlName="city">
+
+        <label for="state">State: </label>
+        <input id="state" type="text" formControlName="state">
+
+        <label for="zip">Zip Code: </label>
+        <input id="zip" type="text" formControlName="zip">
+    </div>
+</form>
+
+<p>Complete the form to enable button.</p>
+<button type="submit" [disabled]="!personForm.valid" (click)="onSubmit()">Submit</button>
+<p>Form Value: </p>
+<div>
+    <pre>{{ personForm.value | json }}</pre>
+</div>
+
+<p>Form Status: {{ personForm.status }}</p>
 <div>Source</div>
 <div>
     <pre>{{ address | json }}</pre>
