@@ -1,0 +1,8 @@
+{
+    "/shippingapi.dll": {
+        "target": "https://secure.shippingapis.com",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

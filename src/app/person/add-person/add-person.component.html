@@ -1,0 +1,9 @@
+<p>add-person works!</p>
+<div>Source</div>
+<div>
+    <pre>{{ address | json }}</pre>
+</div>
+
+<div *ngIf="result$ | async as resultAddress">
+    <pre>{{resultAddress | json}}</pre>
+</div>
