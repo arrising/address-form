@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Address } from 'src/app/models/Address';
-import { ZipCodeLookupService } from 'src/app/services/zip-code-lookup.service';
+import { ZipCodeLookupService } from 'src/app/zip-code-lookup/zip-code-lookup.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

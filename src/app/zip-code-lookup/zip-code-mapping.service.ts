@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Address } from '../models/Address';
-import { ZipCodeLookupRequest } from '../models/ZipCodeLookupRequest';
+import { ZipCodeLookupRequest } from './Models/ZipCodeLookupRequest';
 import { environment } from 'src/environments/environment.development';
-import { ZipCodeLookupResponse } from '../models/ZipCodeLookupResponse';
+import { ZipCodeLookupResponse } from './Models/ZipCodeLookupResponse';
 import * as xmlUtilities from '../Utilities/JsonToXml';
 
 @Injectable({
