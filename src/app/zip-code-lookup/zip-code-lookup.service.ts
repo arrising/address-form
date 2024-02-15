@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { Address } from '../models/Address';
 import { environment } from 'src/environments/environment.development';
-import * as xmlUtilities from '../Utilities/JsonToXml';
 import { ZipCodeMappingService } from './zip-code-mapping.service';
 
 @Injectable({
@@ -11,6 +10,14 @@ import { ZipCodeMappingService } from './zip-code-mapping.service';
 })
 export class ZipCodeLookupService {
   constructor(private _http: HttpClient, private _mapper: ZipCodeMappingService) { }
+
+  isAddressCompleteForLookup(address: Address): boolean {
+    return !!address
+      //TODO:  Need better validaiton, for now, checking minimun length
+      && this.hasMinimunLength(address.addressLine1, 4)
+      && this.hasMinimunLength(address.city, 3)
+      && this.hasMinimunLength(address.state, 2);
+  }
 
   getAddressZipCode(address: Address): Observable<any> {
     const requestXml = this._mapper.mapAddressToRequestXml(address);
@@ -25,23 +32,28 @@ export class ZipCodeLookupService {
       }).pipe(
         map(x => this._mapper.mapApiResponseToAddress(x)),
         tap(response => {
+          console.log('ZipCodeLookupService getAddressZipCode Reveived Response', { address, response });
           return response;
         }),
-        catchError(this.handleError<string>(`getAddressZipCode`))
+        catchError(this.handleError)
       );
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong.
+      console.error(
+        `Backend returned code ${error.status}, body was: `, error.error);
+    }
+    // Return an observable with a user-facing error message.
+    return throwError(() => new Error('Something bad happened; please try again later.'));
+  }
 
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      console.error(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  private hasMinimunLength(value: string, minLength: number): boolean {
+    return !!value && value !== '' && value.length >= minLength;
   }
 }

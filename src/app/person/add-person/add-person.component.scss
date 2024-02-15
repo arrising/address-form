@@ -1,7 +1,3 @@
-mat-drawer {
-    width: 300;
-  }
-
 form-container {
     width: 50%;
 }
@@ -14,6 +10,14 @@ div.address-input {
     }
 
     mat-form-field.state-zip {
+        width: 100%;
+    }
+}
+
+div.one-column {
+    width: 50%;
+
+    mat-form-field {
         width: 100%;
     }
 }

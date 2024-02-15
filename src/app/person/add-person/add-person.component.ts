@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Subscription, take, tap } from 'rxjs';
 import { Address } from 'src/app/models/Address';
 import { ZipCodeLookupService } from 'src/app/zip-code-lookup/zip-code-lookup.service';
 import { environment } from 'src/environments/environment';
@@ -10,30 +10,47 @@ import { environment } from 'src/environments/environment';
   templateUrl: './add-person.component.html',
   styleUrls: ['./add-person.component.scss']
 })
-export class AddPersonComponent {
-  result$: Observable<Address>;
+export class AddPersonComponent implements OnDestroy {
+  private _formWatch: Subscription;
   allowDiagnostics = environment.allowDiagnostics;
   personForm = this._formBuilder.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
-    phoneNumber: ['', Validators.required],
+    phone: ['', Validators.required],
     address: this._formBuilder.group({
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      zip: ['', Validators.required],
+      zipCode: ['', Validators.required],
     }),
   });
 
-  public address: Address = {
-    addressLine1: '911 Military St',
-    city: 'Port Huron',
-    state: 'Michigan'
+  constructor(private _formBuilder: FormBuilder, private _zipCodeService: ZipCodeLookupService) {
+    this._formWatch = this.personForm.valueChanges.subscribe((value) => this.onFormChange(value));
   }
 
-  constructor(private _formBuilder: FormBuilder, private _zipCodeService: ZipCodeLookupService) {
-    this.result$ = this._zipCodeService.getAddressZipCode(this.address);
+  ngOnDestroy(): void {
+    if (this._formWatch?.unsubscribe) {
+      this._formWatch.unsubscribe();
+    }
+  }
+
+  onFormChange($event: any): void {
+    const address = this.personForm.value.address as Address;
+    console.log('On Form changed', { $event, address });
+
+    if (address && this._zipCodeService.isAddressCompleteForLookup(address)) {
+      this._zipCodeService.getAddressZipCode(address).pipe(
+        take(1),
+        tap(response => {
+          console.log('Reveived Zipcode value', { response });
+          const value = { address: response };
+          const options = { emitEvent: false };
+          this.personForm.patchValue(value, options);
+        })
+      ).subscribe();
+    }
   }
 
   onSubmit() {
