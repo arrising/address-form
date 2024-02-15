@@ -1,0 +1,27 @@
+mat-drawer {
+    width: 300;
+  }
+
+form-container {
+    width: 50%;
+}
+
+div.address-input {
+    width: 50%;
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    mat-form-field.state-zip {
+        width: 100%;
+    }
+}
+
+div.two-column {
+    width: 50%;
+
+    mat-form-field {
+        width: 50%;
+    }
+}

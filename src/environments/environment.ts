@@ -1,4 +1,5 @@
 export const environment = {
     zipCodeServiceBaseUrl: 'https://secure.shippingapis.com',
-    zipCodeServiceUserId: '431MICHI2638'
+    zipCodeServiceUserId: '431MICHI2638',
+    allowDiagnostics: false
 };
