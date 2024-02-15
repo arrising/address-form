@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AddPersonComponent } from './add-person/add-person.component';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { AppControlsModule } from '../app-controls/app-controls.module';
-import { NgxMatInputTelComponent } from 'ngx-mat-input-tel';
+import { AppPipesModule } from '../app-pipes/app-pipes.module';
+import { AddPersonComponent } from './add-person/add-person.component';
+import { PersonDialogComponent } from './person-dialog/person-dialog.component';
 
 @NgModule({
   declarations: [
-    AddPersonComponent
+    AddPersonComponent,
+    PersonDialogComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +18,7 @@ import { NgxMatInputTelComponent } from 'ngx-mat-input-tel';
     ReactiveFormsModule,
     AngularMaterialModule,
     AppControlsModule,
-    NgxMatInputTelComponent
+    AppPipesModule
   ]
 })
 export class PersonModule { }
