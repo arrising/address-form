@@ -1,6 +1,6 @@
 import { Component, DebugElement, ElementRef, Injectable } from '@angular/core';
 import { ZipCodeDirective } from './zip-code.directive';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 @Injectable()
@@ -22,8 +22,8 @@ describe('ZipCodeDirective', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-       TestComponent,
-       ZipCodeDirective
+        TestComponent,
+        ZipCodeDirective
       ],
       imports: [],
       providers: [
@@ -81,6 +81,77 @@ describe('ZipCodeDirective', () => {
           expect(spy).not.toHaveBeenCalled();
         }
       });
+    });
+  });
+
+  describe('blockPaste', () => {
+    let pasteValue: string;
+    let event: KeyboardEvent;
+
+    describe('when value is invalid', () => {
+      beforeEach(() => {
+        pasteValue = 'abcde-1234';
+        directiveElm.nativeElement.value = pasteValue;
+        const eventInit: KeyboardEventInit = {
+          key: 'v',
+          ctrlKey: true
+        };
+        event = new KeyboardEvent('paste', eventInit);
+      });
+
+      it('should call preventDefault', fakeAsync(() => {
+        spyOn(event, 'preventDefault').and.stub();
+        directiveElm.triggerEventHandler('paste', event);
+
+        tick(500);
+        fixture.whenStable().then(() => {
+          expect(event.preventDefault).toHaveBeenCalled();
+        });
+      }));
+
+      it('should set input value to empty string', fakeAsync(() => {
+        spyOn(event, 'preventDefault').and.stub();
+        directiveElm.triggerEventHandler('paste', event);
+
+        tick(500);
+        fixture.whenStable().then(() => {
+          expect(
+            directiveElm.nativeElement.value).toBe('');
+        });
+      }));
+    });
+
+    describe('when value is valid', () => {
+      beforeEach(() => {
+        pasteValue = '12345-1234';
+        directiveElm.nativeElement.value = pasteValue;
+        const eventInit: KeyboardEventInit = {
+          key: 'v',
+          ctrlKey: true
+        };
+        event = new KeyboardEvent('paste', eventInit);
+      });
+
+      it('should not call preventDefault', fakeAsync(() => {
+        spyOn(event, 'preventDefault').and.stub();
+        directiveElm.triggerEventHandler('paste', event);
+
+        tick(500);
+        fixture.whenStable().then(() => {
+          expect(event.preventDefault).not.toHaveBeenCalled();
+        });
+      }));
+
+      it('should not change input value', fakeAsync(() => {
+        spyOn(event, 'preventDefault').and.stub();
+        directiveElm.triggerEventHandler('paste', event);
+
+        tick(500);
+        fixture.whenStable().then(() => {
+          expect(
+            directiveElm.nativeElement.value).toBe(pasteValue);
+        });
+      }));
     });
   });
 });
