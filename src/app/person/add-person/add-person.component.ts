@@ -43,13 +43,11 @@ export class AddPersonComponent implements OnDestroy {
 
   onFormChange($event: any): void {
     const address = this.personForm.value.address as Address;
-    console.log('On Form changed', { $event, address });
 
     if (address && this._zipCodeService.isAddressCompleteForLookup(address)) {
       this._zipCodeService.getAddressZipCode(address).pipe(
         take(1),
         tap(response => {
-          console.log('Reveived Zipcode value', { response });
           const value = { address: response };
           const options = { emitEvent: false };
           this.personForm.patchValue(value, options);
@@ -59,7 +57,6 @@ export class AddPersonComponent implements OnDestroy {
   }
 
   onSubmit() {
-    console.log('Show person', { person: this.personForm.value});
     this._dialog.open(PersonDialogComponent, {
       data: this.personForm.value as Person
     })

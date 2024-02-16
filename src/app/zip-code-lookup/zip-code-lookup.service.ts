@@ -32,7 +32,6 @@ export class ZipCodeLookupService {
       }).pipe(
         map(x => this._mapper.mapApiResponseToAddress(x)),
         tap(response => {
-          console.log('ZipCodeLookupService getAddressZipCode Reveived Response', { address, response });
           return response;
         }),
         catchError(this.handleError)

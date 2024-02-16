@@ -5,24 +5,24 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class PhoneNumberPipe implements PipeTransform {
 
-  transform(rawNum: string): string | undefined {
-    if (!rawNum || rawNum.length < 10) {
-      return rawNum;
+  transform(value: string | undefined): string | undefined {
+    if (!value || value.length < 10) {
+      return value;
     }
 
-    if (!rawNum.startsWith('+1')) {
-      if (rawNum.startsWith('1')) {
-        rawNum = "+" + rawNum;
-      } else if (rawNum.startsWith('+')) {
-        rawNum = "+1" + rawNum.slice(1);
+    if (!value.startsWith('+1')) {
+      if (value.startsWith('1')) {
+        value = "+" + value;
+      } else if (value.startsWith('+')) {
+        value = "+1" + value.slice(1);
       } else {
-        rawNum = "+1" + rawNum;
+        value = "+1" + value;
       }
     }
 
-    const areaCodeStr = rawNum.slice(2, 5);
-    const midSectionStr = rawNum.slice(5, 8);
-    const lastSectionStr = rawNum.slice(8);
+    const areaCodeStr = value.slice(2, 5);
+    const midSectionStr = value.slice(5, 8);
+    const lastSectionStr = value.slice(8);
 
     return `(${areaCodeStr})${midSectionStr}-${lastSectionStr}`;
   }
